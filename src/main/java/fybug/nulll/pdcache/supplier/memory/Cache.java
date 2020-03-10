@@ -6,11 +6,11 @@ import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 
-import fybug.nulll.pdconcurrent.SyLock;
 import fybug.nulll.pdcache.CacheGcThrea;
-import fybug.nulll.pdcache.fun.CanClean;
-import fybug.nulll.pdcache.fun.tryConsumer;
-import fybug.nulll.pdcache.fun.trySupplier;
+import fybug.nulll.pdcache.CanClean;
+import fybug.nulll.pdconcurrent.SyLock;
+import fybug.nulll.pdconcurrent.fun.tryConsumer;
+import fybug.nulll.pdconcurrent.fun.trySupplier;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
