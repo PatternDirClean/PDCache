@@ -19,7 +19,7 @@
 要导入其依赖库,在项目的 **lib** 文件夹下可以找到
 
 依赖的同系列的项目
-- PDConcurrent
+- [PDConcurrent](https://gitee.com/PatternDirClean/PDConcurrent)
 
 可通过 **WIKI** / **java Doc** 查看示例
 
