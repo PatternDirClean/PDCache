@@ -19,14 +19,14 @@
 要导入其依赖库,在项目的 **lib** 文件夹下可以找到
 
 依赖的同系列的项目
-- [PDConcurrent](https://gitee.com/PatternDirClean/PDConcurrent)
+- [PDConcurrent](../PDConcurrent)
 
 可通过 **WIKI** / **java Doc** 查看示例
 
 ## 分支说明
-[dev-master](https://gitee.com/PatternDirClean/PDCache/tree/dev-master) :当前的开发分支，可以拿到最新的每夜版 jar
+**dev-master**：当前的开发分支，可以拿到最新的每夜版 jar
 
-[releases](https://gitee.com/PatternDirClean/PDCache/tree/releases/) :当前发布分支，稳定版的源码
+**releases**：当前发布分支，稳定版的源码
 
 -------------------------------------------------------------------------------
 
