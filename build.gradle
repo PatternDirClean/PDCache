@@ -29,6 +29,7 @@ repositories {
 
 dependencies {
     implementation fileTree(dir: 'lib', includes: ['*.jar'])
+    compile "org.jetbrains:annotations:17.0.0"
     compile "org.projectlombok:lombok:1.18.8"
     annotationProcessor "org.projectlombok:lombok:1.18.8"
 }
