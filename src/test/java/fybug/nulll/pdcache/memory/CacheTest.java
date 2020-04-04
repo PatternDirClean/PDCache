@@ -36,29 +36,6 @@ class CacheTest {
     @Test
     public
     void cache() throws Exception {
-        var o = new Object();
-
-        from.println(o);
-        cache.set(o);
-        cache.get(to::println);
-
-        o = null;
-        System.gc();
-        from.println("null");
-        cache.get(to::println);
-
-        o = new Object();
-
-        from.println(o);
-        cache.set(o);
-        cache.get(to::println);
-
-        check();
-    }
-
-    @Test
-    public
-    void cache1() throws Exception {
         CanClean o = new CanClean() {
             public @NotNull
             Runnable getclean() { return () -> to.println("des:"); }

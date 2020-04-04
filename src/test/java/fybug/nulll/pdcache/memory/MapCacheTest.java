@@ -14,6 +14,7 @@ import static fybug.nulll.pdcache.RunTest.destruction;
 import static fybug.nulll.pdcache.RunTest.from;
 import static fybug.nulll.pdcache.RunTest.init;
 import static fybug.nulll.pdcache.RunTest.to;
+
 public
 class MapCacheTest {
     private MapCache<String, Object> cache;
@@ -35,30 +36,6 @@ class MapCacheTest {
     @Test
     public
     void cache() throws Exception {
-        var o = new Object();
-
-        from.println(o);
-        cache.put("asd", o);
-        cache.get("asd", (k, v) -> to.println(v));
-
-        // 模拟回收
-        o = null;
-        System.gc();
-        from.println("null");
-        cache.get("asd", (k, v) -> to.println(v));
-
-        o = new Object();
-
-        from.println(o);
-        cache.put("asd", o);
-        cache.get("asd", (k, v) -> to.println(v));
-
-        check();
-    }
-
-    @Test
-    public
-    void cache1() throws Exception {
         CanClean o = new CanClean() {
             public @NotNull
             Runnable getclean() {
