@@ -9,7 +9,7 @@ import java.lang.ref.Cleaner.Cleanable;
  * @author fybug
  * @version 0.0.1
  * @see Cleanable#register(Object, Runnable)
- * @since fun 0.0.1
+ * @since PDCache 0.0.1
  */
 public
 interface CanClean {
