@@ -4,8 +4,10 @@
  * 用于临时保存数据的缓存工具<br/>
  * 在缓存不被使用的时候有概率会回收<br/>
  * 可保证对应缓存数据的不重复<br/>
- * 缓存可指定缓存方式，既内部使用的 {@link java.lang.ref.Reference} 的实现
- * <p>
+ * 缓存可指定缓存方式，既内部使用的 {@link java.lang.ref.Reference} 的实现<br/>
+ * 缓存的数据可以是 {@link fybug.nulll.pdcache.CanClean} 的实现，
+ * 该类实现会被调用 {@link fybug.nulll.pdcache.CanClean#getclean()} 获取被回收时的执行。
+ * 作用于 {@link java.lang.ref.Cleaner#register(Object, Runnable)} 第二个参数
  *
  * @author fybug
  * @version 0.0.1
