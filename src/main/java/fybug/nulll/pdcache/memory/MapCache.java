@@ -88,12 +88,7 @@ class MapCache<K, V> extends MemoryMapCache<K, V> {
     @Override
     @Nullable
     public
-    V get(@NotNull K key) throws Exception, CacheError {
-        if (isClose())
-            throw new CacheError();
-
-        return getdata(key).val;
-    }
+    V get(@NotNull K key) throws Exception, CacheError { return super.get(key); }
 
     @Override
     @Nullable
@@ -114,6 +109,8 @@ class MapCache<K, V> extends MemoryMapCache<K, V> {
     @NotNull
     public
     MapCache<K, V> put(@NotNull K key, @NotNull V val) throws Exception, CacheError {
+        if (isClose())
+            throw new CacheError();
         putdata(key, val);
         return this;
     }

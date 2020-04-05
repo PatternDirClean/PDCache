@@ -75,21 +75,7 @@ class SMapCache<K, V> extends MemoryMapCache<K, V> {
     @Override
     @NotNull
     public
-    V get(@NotNull K key) throws Exception, CacheError {
-        if (isClose())
-            throw new CacheError();
-
-        var enty = getdata(key);
-
-        // 正在被回收，等待释放
-        while( (enty.val == null || enty.ref.isEnqueued()) && map.get(key) == enty.ref )
-            ;
-        if (enty.val == null)
-            // 递归获取新的缓存
-            return get(key);
-
-        return enty.val;
-    }
+    V get(@NotNull K key) throws Exception, CacheError { return super.get(key); }
 
     @Override
     @NotNull
@@ -112,9 +98,7 @@ class SMapCache<K, V> extends MemoryMapCache<K, V> {
 
         // 生成新的数据
         var v = createData(key);
-
         putdata(key, v);
-
         return v;
     }
 

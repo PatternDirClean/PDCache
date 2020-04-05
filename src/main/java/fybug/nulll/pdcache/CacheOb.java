@@ -16,7 +16,7 @@ import fybug.nulll.pdconcurrent.SyLock;
  * 包含缓存的引用，缓存获取方法 {@link #getdata()}，缓存回收接口以及并发管理
  *
  * @author fybug
- * @version 0.0.1
+ * @version 0.0.2
  * @since PDCache 0.0.1
  */
 public abstract
@@ -60,23 +60,31 @@ class CacheOb<V> {
         };
 
         // 赋予强引用，防止进入回收队列
-        LOCK.tryread(Exception.class, () -> ref.item = cache.get());
+        LOCK.read(() -> ref.item = cache.get());
 
         // 校验数据
-        if (ref.item == null)
-            // 锁定数据
-            return LOCK.trywrite(Exception.class, () -> {
-                /* 梅开二度 */
-                if ((ref.item = cache.get()) == null) {
-                    // 等待清理
-                    while( cleanable != null )
-                        ;
-                    // 无缓存处理
-                    return emptyData();
-                }
-
-                return ref.item;
-            });
+        if (ref.item == null) {
+            var b = true;
+            /* 自旋，直到数据完整 */
+            while( b ){
+                b = LOCK.trywrite(Exception.class, () -> {
+                    /* 是否在释放 */
+                    if ((ref.item = cache.get()) == null) {
+                        /* 是否释放完成 */
+                        if (cleanable == null) {
+                            // 获取空数据处理
+                            ref.item = emptyData();
+                            // 完整空数据
+                            return false;
+                        }
+                        // 未清理完成
+                        return true;
+                    }
+                    // 数据完整
+                    return false;
+                });
+            }
+        }
 
         return ref.item;
     }
@@ -99,20 +107,33 @@ class CacheOb<V> {
      */
     protected
     void putdata(@Nullable V v) throws Exception {
-        LOCK.trywrite(Exception.class, () -> {
-            // 获取对象的回收方法
-            if (v instanceof CanClean) {
-                var c = ((CanClean) v).getclean();
-                // 注册回收方法
-                cleanable = CacheGcThrea.binClean(v, () -> {
-                    c.run();
-                    cleanable = null;
-                });
-            }
+        var ref = new Object() {
+            V item;
+        };
 
-            // 绑定缓存
-            cache = refClass.getConstructor(Object.class).newInstance(v);
-        });
+        var b = true;
+        while( b )
+            b = LOCK.trywrite(Exception.class, () -> {
+                /* 正在释放 */
+                if ((ref.item = cache.get()) == null && cleanable != null)
+                    // 等待释放完成
+                    return true;
+
+                // 获取对象的回收方法
+                if (v instanceof CanClean) {
+                    var c = ((CanClean) v).getclean();
+                    // 注册回收方法
+                    cleanable = CacheGcThrea.binClean(v, () -> LOCK.write(() -> {
+                        c.run();
+                        cleanable = null;
+                    }));
+                }
+
+                // 绑定缓存
+                cache = refClass.getConstructor(Object.class).newInstance(v);
+                // 处理完成
+                return false;
+            });
     }
 
     /**
@@ -123,16 +144,15 @@ class CacheOb<V> {
      */
     public
     void clear() {
+        var ref = new Object() {
+            V item;
+        };
         LOCK.write(() -> {
             // 正在被回收
-            if (cache.isEnqueued())
+            if ((ref.item = cache.get()) == null)
                 return;
-            /* 释放 */
-            if (cleanable != null)
-                cleanable.clean();
-            // GC mark
-            cleanable = null;
-            cache.clear();
+            // 手动释放
+            cache.enqueue();
         });
     }
 

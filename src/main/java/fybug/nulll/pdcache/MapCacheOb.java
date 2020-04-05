@@ -18,7 +18,7 @@ import fybug.nulll.pdconcurrent.SyLock;
  * 包含缓存的引用映射，缓存获取方法 {@link #getdata(K key)}，缓存回收接口映射以及并发管理
  *
  * @author fybug
- * @version 0.0.1
+ * @version 0.0.2
  * @since PDCache 0.0.1
  */
 public abstract
@@ -61,9 +61,8 @@ class MapCacheOb<K, V> {
     @NotNull
     protected
     MapCacheOb<K, V>.Enty getdata(@NotNull K key) throws Exception {
-
         // 缓存记录对象
-        final Enty enty = new Enty();
+        final var enty = new Enty();
 
         // get ref
         LOCK.read(() -> {
@@ -78,12 +77,12 @@ class MapCacheOb<K, V> {
         /* 检查获取的数据 */
         if (enty.val == null) {
             var b = true;
-            /* 持续检查，直到数据完整 */
+            /* 自旋，直到数据完整 */
             while( b ){
                 b = LOCK.trywrite(Exception.class, () -> {
-                    /* 检查是否要等待释放 */
+                    /* 当前是否正在释放 */
                     if ((enty.ref = map.get(key)) == null || (enty.val = enty.ref.get()) == null) {
-                        /*是否释放 */
+                        /* 扫尾接口是否运行完成 */
                         if (cleanableMap.get(key) == null) {
                             // 空数据处理
                             enty.val = emptyData(key);
@@ -100,7 +99,6 @@ class MapCacheOb<K, V> {
                 });
             }
         }
-
         return enty;
     }
 
@@ -123,25 +121,40 @@ class MapCacheOb<K, V> {
      */
     protected
     void putdata(@NotNull K key, @NotNull V v) throws Exception {
-        /* 获取对象的回收方法 */
-        Runnable clean;
-        if (v instanceof CanClean)
-            clean = ((CanClean) v).getclean();
-        else
-            clean = null;
+        final var enty = new Enty();
 
-        /* 注册回收方法 */
-        LOCK.trywrite(Exception.class, () -> {
-            cleanableMap.put(key, CacheGcThrea.binClean(v, () -> LOCK.write(() -> {
-                if (clean != null)
-                    clean.run();
-                cleanableMap.remove(key);
-                map.remove(key);
-            })));
+        /* 检查获取的数据 */
+        var b = true;
+        /* 自旋，直到数据完整 */
+        while( b ){
+            b = LOCK.trywrite(Exception.class, () -> {
+                /* 正在释放 */
+                if (((enty.ref = map.get(key)) != null && (enty.val = enty.ref.get()) == null) &&
+                    cleanableMap.get(key) != null)
+                    // 等待释放完成
+                    return true;
 
-            // 放入缓存
-            map.put(key, refClass.getConstructor(Object.class).newInstance(v));
-        });
+                /* 获取对象的回收方法 */
+                Runnable clean;
+                if (v instanceof CanClean)
+                    clean = ((CanClean) v).getclean();
+                else
+                    clean = null;
+
+                /* 注册回收方法 */
+                cleanableMap.put(key, CacheGcThrea.binClean(v, () -> LOCK.write(() -> {
+                    if (clean != null)
+                        clean.run();
+                    cleanableMap.remove(key);
+                    map.remove(key);
+                })));
+
+                // 放入缓存
+                map.put(key, refClass.getConstructor(Object.class).newInstance(v));
+                // 处理完成
+                return false;
+            });
+        }
     }
 
     /**
@@ -157,21 +170,19 @@ class MapCacheOb<K, V> {
     @Nullable
     protected
     V removeData(@NotNull K key) {
-        return LOCK.write(() -> {
-            var ref = map.remove(key);
-            var c = cleanableMap.get(key);
+        final var cac = new Object() {
+            Reference<V> ref;
             V v;
+        };
 
-            if (ref == null || ref.isEnqueued())
+        return LOCK.write(() -> {
+            // 已在释放
+            if ((cac.ref = map.get(key)) == null || (cac.v = cac.ref.get()) == null)
                 return null;
 
-            v = ref.get();
-
-            if (c != null)
-                c.clean();
-            ref.clear();
-
-            return v;
+            // 手动释放
+            cac.ref.enqueue();
+            return cac.v;
         });
     }
 
@@ -182,7 +193,7 @@ class MapCacheOb<K, V> {
         LOCK.write(() -> {
             map.values().forEach(v -> {
                 // 对象被释放
-                if (v.isEnqueued() || v.get() == null)
+                if (v == null || v.get() == null)
                     return;
                 v.enqueue();
             });

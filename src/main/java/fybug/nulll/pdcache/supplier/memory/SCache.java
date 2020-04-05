@@ -109,19 +109,8 @@ class SCache<V> extends MemoryCache<V> {
     V emptyData() throws Exception {
         // 生成新的数据
         var v = createData();
-
-        // 获取对象的回收方法
-        if (v instanceof CanClean) {
-            var c = ((CanClean) v).getclean();
-            // 注册回收方法
-            cleanable = CacheGcThrea.binClean(v, () -> {
-                c.run();
-                cleanable = null;
-            });
-        }
-
         // 绑定缓存
-        cache = refClass.getConstructor(Object.class).newInstance(v);
+        putdata(v);
         return v;
     }
 

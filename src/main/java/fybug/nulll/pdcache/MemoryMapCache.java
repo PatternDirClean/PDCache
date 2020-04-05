@@ -38,8 +38,12 @@ class MemoryMapCache<K, V> extends MapCacheOb<K, V> implements Closeable {
      *
      * @return 缓存数据
      */
-    public abstract
-    V get(@NotNull K key) throws Exception, CacheError;
+    public
+    V get(@NotNull K key) throws Exception, CacheError {
+        if (isClose())
+            throw new CacheError();
+        return getdata(key).val;
+    }
 
     /**
      * 使用缓存的内容运行
