@@ -13,6 +13,7 @@ import static fybug.nulll.pdcache.RunTest.destruction;
 import static fybug.nulll.pdcache.RunTest.from;
 import static fybug.nulll.pdcache.RunTest.init;
 import static fybug.nulll.pdcache.RunTest.to;
+import static fybug.nulll.pdcache.supplier.suppilerTest.getNowClean;
 import static fybug.nulll.pdcache.supplier.suppilerTest.nextClean;
 
 public
@@ -33,6 +34,7 @@ class SCacheTest {
     public
     void tearDown() throws IOException {
         cache.clear();
+        cache = null;
         destruction();
     }
 
@@ -42,7 +44,7 @@ class SCacheTest {
         from.println(nextClean());
         cache.get(to::println);
 
-        from.println("des:");
+        from.println("des:" + getNowClean().toString());
         from.println(nextClean());
         System.gc();
         cache.get(to::println);

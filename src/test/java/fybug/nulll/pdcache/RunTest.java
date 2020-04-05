@@ -17,8 +17,8 @@ class RunTest {
     public static PrintWriter from;
     public static PrintWriter to;
 
-    private static StringWriter from_s;
-    private static StringWriter to_s;
+    public static StringWriter from_s;
+    public static StringWriter to_s;
 
     public static
     void init() {
@@ -28,6 +28,8 @@ class RunTest {
 
     public static
     void destruction() throws IOException {
+        suppilerTest.destruction();
+
         from.close();
         from = null;
         from_s.close();

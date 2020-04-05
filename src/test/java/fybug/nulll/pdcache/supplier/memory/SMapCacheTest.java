@@ -31,7 +31,8 @@ class SMapCacheTest {
     @After
     public
     void tearDown() throws IOException {
-        cache.clear();
+        cache.close();
+        cache = null;
         destruction();
     }
 
@@ -43,7 +44,7 @@ class SMapCacheTest {
         cache.get("asd", (k, v) -> to.println(v));
 
         // 模拟回收
-        from.println("des:");
+        from.println("des:" + getNowClean());
         from.println(nextClean());
         System.gc();
         cache.get("asd", (k, v) -> to.println(v));
