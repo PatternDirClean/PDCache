@@ -21,7 +21,7 @@
 **发行版中可以看到全部版本<br/>项目下的 jar 文件夹是当前最新的每夜版**
 
 依赖的同系列的项目
-- [PDConcurrent](./PDConcurrent)
+- [PDConcurrent](ttps://gitee.com/PDConcurrent)
 
 可通过 **WIKI** 或者 **doc文档** 查看示例
 
