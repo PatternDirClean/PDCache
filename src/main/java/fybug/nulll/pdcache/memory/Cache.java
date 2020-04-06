@@ -99,7 +99,7 @@ class Cache<V> extends MemoryCache<V> {
      * @return this
      */
     @NotNull
-    protected
+    public
     Cache<V> set(@NotNull V v) throws Exception {
         putdata(v);
         return this;

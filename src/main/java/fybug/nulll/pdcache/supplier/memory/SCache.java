@@ -2,11 +2,8 @@ package fybug.nulll.pdcache.supplier.memory;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
 
-import fybug.nulll.pdcache.CacheGcThrea;
 import fybug.nulll.pdcache.CacheOb;
-import fybug.nulll.pdcache.CanClean;
 import fybug.nulll.pdcache.MemoryCache;
 import fybug.nulll.pdcache.memory.Cache;
 import fybug.nulll.pdconcurrent.SyLock;

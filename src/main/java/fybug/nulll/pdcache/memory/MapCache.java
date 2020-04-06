@@ -2,7 +2,6 @@ package fybug.nulll.pdcache.memory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.Closeable;
 import java.lang.ref.Reference;
 
 import fybug.nulll.pdcache.MapCacheOb;
