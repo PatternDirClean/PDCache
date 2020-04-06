@@ -29,8 +29,9 @@ class CacheTest {
     @After
     public
     void tearDown() throws IOException {
-        destruction();
         cache.clear();
+        cache = null;
+        destruction();
     }
 
     @Test
