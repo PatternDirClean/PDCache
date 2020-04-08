@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
+import fybug.nulll.pdcache.PDCache;
 import fybug.nulll.pdcache.supplier.suppilerTest;
 
 import static fybug.nulll.pdcache.RunTest.check;
@@ -24,10 +25,10 @@ class SCacheTest {
     public
     void setUp() {
         init();
-        cache = SCache.build(Object.class)
-                      .createdata(suppilerTest::getNowClean)
-                      .refernce(WeakReference.class)
-                      .build();
+        cache = PDCache.SCache(Object.class)
+                       .createdata(suppilerTest::getNowClean)
+                       .refernce(WeakReference.class)
+                       .build();
     }
 
     @After

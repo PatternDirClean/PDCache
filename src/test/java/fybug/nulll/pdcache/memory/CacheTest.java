@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import fybug.nulll.pdcache.CanClean;
+import fybug.nulll.pdcache.PDCache;
 
 import static fybug.nulll.pdcache.RunTest.check;
 import static fybug.nulll.pdcache.RunTest.destruction;
@@ -23,7 +24,7 @@ class CacheTest {
     public
     void setUp() {
         init();
-        cache = Cache.build(Object.class).refernce(WeakReference.class).build();
+        cache = PDCache.Cache(Object.class).refernce(WeakReference.class).build();
     }
 
     @After

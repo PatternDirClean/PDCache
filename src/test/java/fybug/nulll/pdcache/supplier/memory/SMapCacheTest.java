@@ -6,6 +6,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
+import fybug.nulll.pdcache.PDCache;
+
 import static fybug.nulll.pdcache.RunTest.check;
 import static fybug.nulll.pdcache.RunTest.destruction;
 import static fybug.nulll.pdcache.RunTest.from;
@@ -22,10 +24,10 @@ class SMapCacheTest {
     public
     void setUp() {
         init();
-        cache = SMapCache.build(String.class, Object.class)
-                         .createdata((k) -> getNowClean())
-                         .refernce(WeakReference.class)
-                         .build();
+        cache = PDCache.SMapCache(String.class, Object.class)
+                       .createdata((k) -> getNowClean())
+                       .refernce(WeakReference.class)
+                       .build();
     }
 
     @After
