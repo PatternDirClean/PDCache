@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.ref.Cleaner.Cleanable;
 
 /**
- * 拥有清理回调的对象
+ * <h2>拥有清理回调的对象.</h2>
  *
  * @author fybug
  * @version 0.0.1

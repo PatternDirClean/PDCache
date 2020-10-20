@@ -159,11 +159,12 @@ class CacheOb<V> {
     /*--------------------------------------------------------------------------------------------*/
 
     /**
-     * {@link CacheOb} 子类通用构造工具
-     * <p>
-     * 使用 {@link #refernce(Class)} 绑定缓存方式<br/>
-     * 使用 {@link #lockBy(SyLock)} 绑定并发管理<br/>
-     * 使用 {@link #build()} 进行构造
+     * <h2> {@link CacheOb} 子类通用构造工具.</h2>
+     * <ul>
+     * <li>使用 {@link #refernce(Class)} 绑定缓存方式</li>
+     * <li>使用 {@link #lockBy(SyLock)} 绑定并发管理</li>
+     * <li>使用 {@link #build()} 进行构造</li>
+     * </ul>
      *
      * @version 0.0.1
      * @since CacheOb 0.0.1
