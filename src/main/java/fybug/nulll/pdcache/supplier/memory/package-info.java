@@ -4,7 +4,7 @@
  * 内部的数据只会在内存中保存，不会进行序列化，仅适用于非持久数据
  *
  * @author fybug
- * @version 0.0.1
+ * @version 0.0.2
  * @since supplier 0.0.1
  */
 package fybug.nulll.pdcache.supplier.memory;
