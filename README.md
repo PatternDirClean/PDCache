@@ -1,8 +1,8 @@
 # PDCache
 
 ![java library](https://img.shields.io/badge/type-Libary-gr.svg "type")
-![JDK 13](https://img.shields.io/badge/JDK-13-green.svg "SDK")
-![Gradle 6.0.1](https://img.shields.io/badge/Gradle-6.0.1-04303b.svg "tool")
+![JDK 14](https://img.shields.io/badge/JDK-14-green.svg "SDK")
+![Gradle 6.5](https://img.shields.io/badge/Gradle-6.5-04303b.svg "tool")
 ![Apache 2](https://img.shields.io/badge/license-Apache%202-blue.svg "License")
 
 -- [Java Doc](https://apidoc.gitee.com/PatternDirClean/PDCache) --
@@ -11,9 +11,11 @@
 
 ## 简介
 
-轻量级数据缓存工具，用于在程序内部缓存可丢失型的数据。
+轻量级，高可靠性，强一致性，基于 java 内部 `Reference` 工具的数据缓存工具，用于在程序内部缓存可丢失型的数据。
 
-该工具目前仅可以保存数据，不可对其进行序列化，用于保存类似 数据生成的 json 字符串 之类的可丢失的数据
+该工具目前仅可以保存数据，不可对其进行序列化。
+
+也可用 Map 实现 保存根据 id 区分的数据或可丢失的锁，强一致性的特点可以保证对应 id 存储的 数据 或 锁 为同一个，且在长期不使用时自动移除。
 
 ## 使用方法
 请导入其 `jar` 文件,文件在 **发行版** 或项目的 **jar** 文件夹下可以找到

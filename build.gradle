@@ -9,8 +9,8 @@ tasks.withType(JavaCompile) {
 
 group 'fybug.nulll'
 version = '0.0.1 expander 1'
-sourceCompatibility = '13'
-targetCompatibility = '13'
+sourceCompatibility = '14'
+targetCompatibility = '14'
 
 configurations {
     developmentOnly
