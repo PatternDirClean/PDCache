@@ -1,4 +1,4 @@
-package fybug.nulll.pdcache.supplier.memory;
+package fybug.nulll.pdcache.supplier;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.Reference;
@@ -55,7 +55,7 @@ import lombok.experimental.Accessors;
  * @author fybug
  * @version 0.0.1
  * @see Cache
- * @since memory 0.0.1
+ * @since supplier 0.0.1
  */
 public abstract
 class SCache<V> extends MemoryCache<V> {

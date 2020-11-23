@@ -3,8 +3,8 @@ import org.jetbrains.annotations.NotNull;
 
 import fybug.nulll.pdcache.memory.Cache;
 import fybug.nulll.pdcache.memory.MapCache;
-import fybug.nulll.pdcache.supplier.memory.SCache;
-import fybug.nulll.pdcache.supplier.memory.SMapCache;
+import fybug.nulll.pdcache.supplier.SCache;
+import fybug.nulll.pdcache.supplier.SMapCache;
 import lombok.experimental.UtilityClass;
 
 /**

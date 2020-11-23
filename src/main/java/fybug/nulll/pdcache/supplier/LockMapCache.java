@@ -1,4 +1,4 @@
-package fybug.nulll.pdcache.supplier.memory;
+package fybug.nulll.pdcache.supplier;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.Reference;
@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
  * @version 0.0.1
  * @see SMapCache
  * @see SyLockSupp
- * @since memory 0.0.2
+ * @since supplier 0.0.1
  */
 public
 class LockMapCache<K> extends SMapCache<K, SyLock> {

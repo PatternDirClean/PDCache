@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import fybug.nulll.pdcache.PDCache;
+import fybug.nulll.pdcache.supplier.SCache;
 import fybug.nulll.pdcache.supplier.suppilerTest;
 
 import static fybug.nulll.pdcache.RunTest.check;

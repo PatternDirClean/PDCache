@@ -1,5 +1,4 @@
-package fybug.nulll.pdcache.supplier.memory;
-import java.lang.reflect.InvocationTargetException;
+package fybug.nulll.pdcache.supplier;
 import java.util.function.Supplier;
 
 import fybug.nulll.pdconcurrent.SyLock;
@@ -12,7 +11,7 @@ import fybug.nulll.pdconcurrent.SyLock;
  *
  * @author fybug
  * @version 0.0.1
- * @since memory 0.0.2
+ * @since supplier 0.0.1
  */
 final
 class SyLockSupp implements Supplier<SyLock> {
@@ -27,7 +26,7 @@ class SyLockSupp implements Supplier<SyLock> {
     SyLock get() {
         try {
             return LOCK_CLASS.getConstructor().newInstance();
-        } catch ( InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e ) {
+        } catch ( Exception e ) {
             e.printStackTrace();
         }
         return SyLock.newObjLock();
