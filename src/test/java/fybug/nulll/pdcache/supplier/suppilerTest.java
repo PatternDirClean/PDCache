@@ -4,7 +4,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 import fybug.nulll.pdcache.CanClean;
-import fybug.nulll.pdcache.supplier.memory.memoryTest;
 
 import static fybug.nulll.pdcache.RunTest.to;
 
