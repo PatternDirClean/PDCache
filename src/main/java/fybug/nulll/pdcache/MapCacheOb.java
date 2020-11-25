@@ -204,7 +204,7 @@ class MapCacheOb<K, V> {
     /*--------------------------------------------------------------------------------------------*/
 
     /**
-     * <h2> {@link MapCacheOb} 之类通用构造工具.</h2>
+     * <h2> {@link MapCacheOb} 子类通用构造工具.</h2>
      * <ul>
      * <li>使用 {@link #refernce(Class)} 绑定缓存方式</li>
      * <li>使用 {@link #lockBy(SyLock)} 绑定并发管理</li>

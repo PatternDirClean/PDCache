@@ -3,6 +3,7 @@ import org.jetbrains.annotations.NotNull;
 
 import fybug.nulll.pdcache.memory.Cache;
 import fybug.nulll.pdcache.memory.MapCache;
+import fybug.nulll.pdcache.memory.TimeMapCache;
 import fybug.nulll.pdcache.supplier.SCache;
 import fybug.nulll.pdcache.supplier.SMapCache;
 import lombok.experimental.UtilityClass;
@@ -13,7 +14,7 @@ import lombok.experimental.UtilityClass;
  * 提供所有缓存工具的快速构造索引。
  *
  * @author fybug
- * @version 0.0.1
+ * @version 0.0.2
  * @since PDCache 0.0.1 expander 1
  */
 @UtilityClass
@@ -74,4 +75,20 @@ class PDCache {
     public
     <K, V> SMapCache.Build<K, V> SMapCache(Class<K> kClass, Class<V> vClass)
     { return SMapCache.build(kClass, vClass); }
+
+    /**
+     * 缓存在内存中依靠时间管理的映射数据缓存
+     *
+     * @param kClass 键的类型
+     * @param vClass 数据类型
+     *
+     * @return TimeMapCache
+     *
+     * @see TimeMapCache
+     * @since PDCache 0.0.2
+     */
+    @NotNull
+    public
+    <K, V> TimeMapCache.Build<K, V> TimeMapCache(Class<K> kClass, Class<V> vClass)
+    { return TimeMapCache.build(kClass, vClass); }
 }

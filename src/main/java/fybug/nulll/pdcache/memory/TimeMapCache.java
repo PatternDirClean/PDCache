@@ -7,10 +7,12 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import fybug.nulll.pdconcurrent.ObjLock;
 import fybug.nulll.pdconcurrent.SyLock;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 /**
  * <h2>基于时间控制的缓存.</h2>
@@ -97,11 +99,15 @@ class TimeMapCache<K, V> {
         void run() {
             LOCK.write(() -> {
                 var now = System.currentTimeMillis();
-                map.keySet()
-                   .stream()
-                   .limit(scarrenNum)
-                   .filter(k -> map.get(k).maxtime <= now)
-                   .forEach(map::remove);
+                var i = 0;
+
+                var iter = map.entrySet().iterator();
+                Map.Entry<K, Enty<V>> v;
+                while( iter.hasNext() && i++ < scarrenNum ){
+                    v = iter.next();
+                    if (v.getValue().maxtime <= now)
+                        iter.remove();
+                }
             });
         }
     }
@@ -225,7 +231,13 @@ class TimeMapCache<K, V> {
     void trimData() {
         LOCK.write(() -> {
             long nowtime = System.currentTimeMillis();
-            map.keySet().stream().filter(k -> map.get(k).maxtime <= nowtime).forEach(map::remove);
+            var iter = map.entrySet().iterator();
+            Map.Entry<K, Enty<V>> v;
+            while( iter.hasNext() ){
+                v = iter.next();
+                if (v.getValue().maxtime <= nowtime)
+                    iter.remove();
+            }
         });
     }
 
@@ -246,6 +258,55 @@ class TimeMapCache<K, V> {
     void closeTimeTaskAndClear() {
         closeTimeTask();
         clear();
+    }
+
+    /*--------------------------------------------------------------------------------------------*/
+
+    /**
+     * 获取缓存构造工具
+     *
+     * @param <K> 键的类型
+     * @param <V> 缓存内容的类型
+     *
+     * @return 构造工具
+     */
+    @NotNull
+    public static
+    <K, V> Build<K, V> build(Class<K> kClass, Class<V> vClass) { return new Build<>(); }
+
+    /**
+     * <h2> {@link TimeMapCache} 构造工具.</h2>
+     * <ul>
+     * <li>使用 {@link #lockBy(SyLock)} 绑定并发管理</li>
+     * <li>使用 {@link #dataTime(long)} 指定数据存活时间</li>
+     * <li>使用 {@link #scarrentime(long)} 指定扫描间隔时间</li>
+     * <li>使用 {@link #scarrenNum(int)} 指定扫描数量</li>
+     * <li>使用 {@link #build()} 进行构造</li>
+     * </ul>
+     *
+     * @version 0.0.1
+     * @since TimeMapCache 0.0.1
+     */
+    @Accessors( chain = true, fluent = true )
+    public static final
+    class Build<K, V> {
+        /** 并发工具 */
+        @Setter protected SyLock lockBy = new ObjLock();
+        /** 默认数据存活时间 */
+        @Setter protected long dataTime = 5 * 60000;
+        /** 扫描时检查的数量 */
+        @Setter protected int scarrenNum = 20;
+        /** 扫描间隔时间 */
+        @Setter protected long scarrentime = 24 * 60 * 600000;
+
+        /** 构造 */
+        @NotNull
+        public
+        TimeMapCache<K, V> build() {
+            var c = new TimeMapCache<K, V>(lockBy, dataTime, scarrentime);
+            c.setScarrenNum(scarrenNum);
+            return c;
+        }
     }
 
     //----------------------------------------------------------------------------------------------
