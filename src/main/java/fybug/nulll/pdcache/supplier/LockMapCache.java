@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
  * @version 0.0.1
  * @see SMapCache
  * @see SyLockSupp
- * @since supplier 0.0.1
+ * @since supplier 0.0.2
  */
 public
 class LockMapCache<K> extends SMapCache<K, SyLock> {

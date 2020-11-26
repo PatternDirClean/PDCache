@@ -18,6 +18,8 @@ import lombok.experimental.Accessors;
  * <h2>基于时间控制的缓存.</h2>
  * <p>
  * 内部使用 {@link LinkedHashMap} 实现的缓存工具，可指定数据过期的时间（毫秒）。<br/>
+ * 数据不会因为当前被持有而不会过期，因为数据基于时间控制，内部不使用 {@link java.lang.ref.Reference} 维护。
+ * <br/><br/>
  * 内部会使用线程检查当前在热度排序中最后的几个数据，过期则会被主动移除。<br/>
  * 可通过 {@link #closeTimeTask()} 关闭扫描线程，效果等同于构造时传入的扫描间隔为 0，在不需要该工具时也可以使用 {@link #closeTimeTaskAndClear()} 清空数据并关闭扫描线程。<br/>
  * 在每次读取数据的时候都会检查数据是否过期，避免已过期的高热度数据残留。<br/>

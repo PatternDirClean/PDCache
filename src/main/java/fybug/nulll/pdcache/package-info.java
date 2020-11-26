@@ -12,7 +12,7 @@
  * v0.0.1 expander 1 :增加 {@link fybug.nulll.pdcache.PDCache} 类，提供所有缓存工具快速索引
  *
  * @author fybug
- * @version 0.0.1 expander 1
+ * @version 0.0.2
  * @since JDK 13
  */
 package fybug.nulll.pdcache;

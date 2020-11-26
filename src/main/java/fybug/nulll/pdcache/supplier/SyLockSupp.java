@@ -11,7 +11,7 @@ import fybug.nulll.pdconcurrent.SyLock;
  *
  * @author fybug
  * @version 0.0.1
- * @since supplier 0.0.1
+ * @since supplier 0.0.2
  */
 final
 class SyLockSupp implements Supplier<SyLock> {
