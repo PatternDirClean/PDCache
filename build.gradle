@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    id 'idea'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+group 'fybug.nulll'
+version = '0.0.2 expand 1'
+sourceCompatibility = '14'
+targetCompatibility = '14'
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenLocal()
+    maven { url "https://maven.aliyun.com/repository/jcenter" }
+}
+
+dependencies {
+    implementation fileTree(dir: 'lib', includes: ['*.jar'])
+    compile "org.jetbrains:annotations:17.0.0"
+    compile "org.projectlombok:lombok:1.18.10"
+    annotationProcessor "org.projectlombok:lombok:1.18.10"
+}
+
+test {
+    dependencies {
+        testCompile "junit:junit:4.12"
+    }
+    useJUnitPlatform()
+}
