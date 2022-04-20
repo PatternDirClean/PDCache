@@ -6,7 +6,7 @@
 
     <groupId>fybug.nulll</groupId>
     <artifactId>PDCache</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.2 expand 1</version>
     <build>
         <plugins>
             <plugin>
