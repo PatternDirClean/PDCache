@@ -17,12 +17,6 @@
 
 如果你熟悉缓存的概念，将会让你非常容易学习本工具。
 
-如果熟悉 Cleaner 和 Reference 对象、软引用、弱引用 等将会使你更懂本工具的一些高级用法，因为本工具中的缓存功能是靠 Reference 实现，TimeMapCache 除外
-
-并且使用了 Cleaner 意味着缓存被回收时可以有回调，但是要求该回调要从被缓存的对象内获取，也就是要求被缓存的对象必须继承一个接口，该接口只有一个方法，用来抛出回调对象
-
-最好熟悉我的 并发工具 [PDConcurrent](https://gitee.com/PatternDirClean/PDConcurrent) ，本工具所有方法均为并发安全，并且完全托管给 [PDConcurrent](https://gitee.com/PatternDirClean/PDConcurrent) 工具进行并发管理
-
 ### \> > 基础示例
 
 Cache 对象用于缓存单独一个对象，不过貌似并不常用到，但是其实现最简单，而且使用起来方便
@@ -90,6 +84,12 @@ void main(String[] args) {
     }
 }
 ```
+
+如果熟悉 Cleaner 和 Reference 对象、软引用、弱引用 等将会使你更懂本工具的一些高级用法，因为本工具中的缓存功能是靠 Reference 实现，TimeMapCache 除外
+
+并且使用了 Cleaner 意味着缓存被回收时可以有回调，但是要求该回调要从被缓存的对象内获取，也就是要求被缓存的对象必须继承一个接口，该接口只有一个方法，用来抛出回调对象
+
+最好熟悉我的 并发工具 [PDConcurrent](https://gitee.com/PatternDirClean/PDConcurrent) ，本工具所有方法均为并发安全，并且完全托管给 [PDConcurrent](https://gitee.com/PatternDirClean/PDConcurrent) 工具进行并发管理
 
 ## 使用方法
 请导入其 `jar` 文件,文件在 **发行版** 或项目的 **jar** 文件夹下可以找到
