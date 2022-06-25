@@ -5,7 +5,7 @@
 ![Gradle 6.5](https://img.shields.io/badge/Gradle-6.5-04303b.svg "tool")
 ![Apache 2](https://img.shields.io/badge/license-Apache%202-blue.svg "License")
 
--- [Java Doc](https://apidoc.gitee.com/PatternDirClean/PDCache) --
+-- [Java Doc](https://apidoc.gitee.com/fybug/PDCache) --
 
 -------------------------------------------------------------------------------
 

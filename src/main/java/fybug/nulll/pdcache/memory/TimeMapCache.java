@@ -10,6 +10,7 @@ import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import fybug.nulll.pdconcurrent.ObjLock;
 import fybug.nulll.pdconcurrent.SyLock;
@@ -44,7 +45,7 @@ import lombok.val;
  * </ul>
  *
  * @author fybug
- * @version 0.0.2
+ * @version 0.0.3
  * @since memory 0.0.2
  */
 public
@@ -190,6 +191,8 @@ class TimeMapCache<K, V> {
 
     /**
      * 使用数据
+     * <p>
+     * 使用读锁进行
      *
      * @param k 数据的键
      *
@@ -203,16 +206,22 @@ class TimeMapCache<K, V> {
 
     /**
      * 使用数据
+     * <p>
+     * 如果刷新时间为 0，则使用 {@link SyLock#read(Supplier)} 读锁进行<br/>
+     * 如果需要刷新数据存活时间，则使用 {@link SyLock#write(Supplier)} 写锁进行
      *
      * @param k           数据的键
      * @param newDatatime 数据的新存活时间，从现在开始记录
      *
      * @return 返回之前保存的数据，如果数据过期返回 null
+     *
+     * @since TimeMapCache v0.0.3
      */
     @Nullable
     public
     V getData(@NotNull K k, long newDatatime) {
-        return LOCK.write(() -> {
+        // 运行函数
+        Supplier<V> r = () -> {
             if (check(k)) {
                 var v = map.remove(k);
 
@@ -225,7 +234,13 @@ class TimeMapCache<K, V> {
             }
             GcVal(map.remove(k));
             return null;
-        });
+        };
+
+        // 刷新时间用写锁，不刷新用读锁
+        if (newDatatime <= 0)
+            return LOCK.read(r);
+        else
+            return LOCK.write(r);
     }
 
     /**
