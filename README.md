@@ -94,12 +94,20 @@ void main(String[] args) {
 ## 使用方法
 请导入其 `jar` 文件,文件在 **发行版** 或项目的 **jar** 文件夹下可以找到
 
-> PDCache_bin.jar 为包含了依赖库的包，PDCache.jar 为不包含依赖库的包，PDCache_all.jar 为包含了依赖库与源码的包
+> PDCache.jar 为不包含依赖库的包
+>
+> PDCache_bin.jar 为包含了依赖库的包
+>
+> PDCache_all.jar 为包含了依赖库与源码的包
+>
+> PDCache_sources.jar 为仅包含源码的包
 
 **发行版中可以看到全部版本<br/>项目下的 jar 文件夹是当前最新的每夜版**
 
 依赖的同系列的项目
 - [PDConcurrent](https://gitee.com/PatternDirClean/PDConcurrent)
+
+> 包含源码的 jar 包均包含同系列依赖库的源码
 
 可通过 **WIKI**、**java doc** 或者 **测试类** 查看示例，并深入学习本工具
 
