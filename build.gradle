@@ -39,9 +39,86 @@ repositories {
 }
 
 dependencies {
-    testCompile "junit:junit:4.12"
     implementation fileTree(dir: 'lib', includes: ['*.jar'])
-    compile "org.jetbrains:annotations:17.0.0"
-    compile "org.projectlombok:lombok:1.18.10"
+    compileClasspath "org.jetbrains:annotations:17.0.0"
+    compileClasspath "org.projectlombok:lombok:1.18.10"
     annotationProcessor "org.projectlombok:lombok:1.18.10"
+
+    testCompile "junit:junit:4.12"
+    testCompile "org.jetbrains:annotations:17.0.0"
+    testCompile "org.projectlombok:lombok:1.18.10"
+}
+
+task PDCache(type: Jar) {
+    destinationDirectory = file('jar')
+    manifest {
+        attributes(
+                'Manifest-Version': '1.0',
+                'Built-By': 'fybug/风雨bu改',
+                'Created-By': 'IntelliJ IDEA'
+        )
+    }
+    archiveFileName = 'PDCache.jar'
+    // 打包编译输出
+    from sourceSets.main.output
+}
+
+task PDCache_bin(type: Jar) {
+    destinationDirectory = file('jar')
+    manifest {
+        attributes(
+                'Manifest-Version': '1.0',
+                'Built-By': 'fybug/风雨bu改',
+                'Created-By': 'IntelliJ IDEA'
+        )
+    }
+    archiveFileName = 'PDCache_bin.jar'
+    // 打包编译输出
+    from sourceSets.main.output
+    from {
+        // implementation 相关的引入解压并打包入新的jar中
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+task PDCache_all(type: Jar) {
+    destinationDirectory = file('jar')
+    manifest {
+        attributes(
+                'Manifest-Version': '1.0',
+                'Built-By': 'fybug/风雨bu改',
+                'Created-By': 'IntelliJ IDEA'
+        )
+    }
+    archiveFileName = 'PDCache_all.jar'
+    // 打包编译输出
+    from sourceSets.main.output
+    // 打包源码
+    from sourceSets.main.allSource
+    from {
+        // implementation 相关的引入解压并打包入新的jar中
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+task PDCache_sources(type: Jar) {
+    destinationDirectory = file('jar')
+    manifest {
+        attributes(
+                'Manifest-Version': '1.0',
+                'Built-By': 'fybug/风雨bu改',
+                'Created-By': 'IntelliJ IDEA'
+        )
+    }
+    archiveFileName = 'PDCache_sources.jar'
+    // 打包源码
+    from sourceSets.main.allSource
+}
+
+task release {
+    dependsOn clean
+    dependsOn PDCache_all
+    dependsOn PDCache_bin
+    dependsOn PDCache
+    dependsOn PDCache_sources
 }
