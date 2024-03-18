@@ -40,13 +40,14 @@ repositories {
 
 dependencies {
     implementation fileTree(dir: 'lib', includes: ['*.jar'])
-    compileClasspath "org.jetbrains:annotations:17.0.0"
-    compileClasspath "org.projectlombok:lombok:1.18.10"
+    compileOnly "org.jetbrains:annotations:17.0.0"
+    compileOnly "org.projectlombok:lombok:1.18.10"
     annotationProcessor "org.projectlombok:lombok:1.18.10"
 
     testCompile "junit:junit:4.12"
-    testCompile "org.jetbrains:annotations:17.0.0"
-    testCompile "org.projectlombok:lombok:1.18.10"
+    testCompileOnly "org.jetbrains:annotations:17.0.0"
+    testCompileOnly "org.projectlombok:lombok:1.18.10"
+    testAnnotationProcessor "org.projectlombok:lombok:1.18.10"
 }
 
 task PDCache(type: Jar) {
