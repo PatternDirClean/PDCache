@@ -39,15 +39,9 @@ repositories {
 }
 
 dependencies {
+    testCompile "junit:junit:4.12"
     implementation fileTree(dir: 'lib', includes: ['*.jar'])
     compile "org.jetbrains:annotations:17.0.0"
     compile "org.projectlombok:lombok:1.18.10"
     annotationProcessor "org.projectlombok:lombok:1.18.10"
-}
-
-test {
-    dependencies {
-        testCompile "junit:junit:4.12"
-    }
-    useJUnitPlatform()
 }
