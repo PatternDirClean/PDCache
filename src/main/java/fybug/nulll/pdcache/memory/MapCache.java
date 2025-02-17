@@ -1,14 +1,13 @@
 package fybug.nulll.pdcache.memory;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.lang.ref.Reference;
+import java.util.function.BiConsumer;
 
 import fybug.nulll.pdcache.MapCacheOb;
 import fybug.nulll.pdcache.MemoryMapCache;
 import fybug.nulll.pdcache.err.CacheError;
 import fybug.nulll.pdconcurrent.SyLock;
-import fybug.nulll.pdconcurrent.fun.tryBiConsumer;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * <h2>映射缓存.</h2>
@@ -66,87 +65,81 @@ import fybug.nulll.pdconcurrent.fun.tryBiConsumer;
 public
 class MapCache<K, V> extends MemoryMapCache<K, V> {
 
-    /** 构造缓存，指定缓存方式 */
-    public
-    MapCache(@NotNull Class<? extends Reference> refc) { super(refc); }
+  /** 构造缓存，指定缓存方式 */
+  public
+  MapCache(@NotNull Class<? extends Reference> refc) { super(refc); }
 
-    /** 构造缓存，指定缓存方式和并发管理 */
-    public
-    MapCache(@NotNull Class<? extends Reference> refc, @NotNull SyLock syLock)
-    { super(refc, syLock); }
+  /** 构造缓存，指定缓存方式和并发管理 */
+  public
+  MapCache(@NotNull Class<? extends Reference> refc, @NotNull SyLock syLock)
+  { super(refc, syLock); }
 
-    //----------------------------------------------------------------------------------------------
+  /**
+   * 获取缓存数据
+   *
+   * @param key 缓存的键
+   *
+   * @return 缓存数据
+   */
+  @Override
+  @Nullable
+  public
+  V get(@NotNull K key) throws Exception, CacheError { return super.get(key); }
 
-    /**
-     * 获取缓存数据
-     *
-     * @param key 缓存的键
-     *
-     * @return 缓存数据
-     */
-    @Override
-    @Nullable
-    public
-    V get(@NotNull K key) throws Exception, CacheError { return super.get(key); }
+  @Override
+  @Nullable
+  public
+  V get(@NotNull K key, @NotNull BiConsumer<K, V> run) throws Exception, CacheError
+  { return super.get(key, run); }
 
-    @Override
-    @Nullable
-    public
-    V get(@NotNull K key, @NotNull tryBiConsumer<K, V, Exception> run) throws Exception, CacheError
-    { return super.get(key, run); }
+  /**
+   * 放入新的缓存
+   *
+   * @param key 缓存的键
+   * @param val 缓存的数据
+   *
+   * @return this
+   */
+  @NotNull
+  public
+  MapCache<K, V> put(@NotNull K key, @NotNull V val) throws Exception, CacheError {
+    if ( isClose() )
+      throw new CacheError();
+    putdata(key, val);
+    return this;
+  }
 
-    //--------------------------------
+  @Nullable
+  protected
+  V emptyData(@NotNull K key) { return null; }
 
-    /**
-     * 放入新的缓存
-     *
-     * @param key 缓存的键
-     * @param val 缓存的数据
-     *
-     * @return this
-     */
+  /**
+   * 获取缓存构造工具
+   *
+   * @param <K> 键的类型
+   * @param <V> 缓存内容的类型
+   *
+   * @return 构造工具
+   */
+  @NotNull
+  public static
+  <K, V> Build<K, V> build(Class<K> kc, Class<V> vc) { return new Build<>(); }
+
+  /**
+   * <h2> {@link MapCache} 构造工具.</h2>
+   * <ul>
+   * <li>使用 {@link #refernce(Class)} 绑定缓存方式</li>
+   * <li>使用 {@link #lockBy(SyLock)} 绑定并发管理</li>
+   * <li>使用 {@link #build()} 进行构造</li>
+   * </ul>
+   *
+   * @version 0.0.1
+   * @since MapCache 0.0.1
+   */
+  public static final
+  class Build<K, V> extends MapCacheOb.Build<K, V, Build<K, V>> {
     @NotNull
     public
-    MapCache<K, V> put(@NotNull K key, @NotNull V val) throws Exception, CacheError {
-        if (isClose())
-            throw new CacheError();
-        putdata(key, val);
-        return this;
-    }
-
-    @Nullable
-    protected
-    V emptyData(@NotNull K key) { return null; }
-
-    /*--------------------------------------------------------------------------------------------*/
-
-    /**
-     * 获取缓存构造工具
-     *
-     * @param <K> 键的类型
-     * @param <V> 缓存内容的类型
-     *
-     * @return 构造工具
-     */
-    @NotNull
-    public static
-    <K, V> Build<K, V> build(Class<K> kc, Class<V> vc) {return new Build<>();}
-
-    /**
-     * <h2> {@link MapCache} 构造工具.</h2>
-     * <ul>
-     * <li>使用 {@link #refernce(Class)} 绑定缓存方式</li>
-     * <li>使用 {@link #lockBy(SyLock)} 绑定并发管理</li>
-     * <li>使用 {@link #build()} 进行构造</li>
-     * </ul>
-     *
-     * @version 0.0.1
-     * @since MapCache 0.0.1
-     */
-    public static final
-    class Build<K, V> extends MapCacheOb.Build<K, V, Build<K, V>> {
-        @NotNull
-        public
-        MapCache<K, V> build() { return new MapCache<>(refernce, lockBy); }
-    }
+    MapCache<K, V> build() { return new MapCache<>(refernce, lockBy); }
+  }
 }

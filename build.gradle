@@ -1,132 +1,114 @@
 plugins {
-    id 'java'
-    id 'idea'
+  id 'java'
+  id 'idea'
 }
 
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
+tasks.withType(JavaCompile).configureEach {
+  options.encoding = "UTF-8"
 }
 
 group 'fybug.nulll'
-version = '0.0.2 expand 2'
-sourceCompatibility = '14'
-targetCompatibility = '14'
+version = '0.0.2 expand 3'
 
-configurations {
-    developmentOnly
-    runtimeClasspath {
-        extendsFrom developmentOnly
-    }
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(23)
+  }
 }
 
 repositories {
-    mavenLocal()
-    mavenCentral()
-    google()
-    maven { url 'https://repo.spring.io/milestone' }
-    maven { url 'https://repo.spring.io/snapshot' }
-    maven { url "https://repo.spring.io/milestone" }
-    maven { url 'https://maven.aliyun.com/repository/releases' }
-    maven { url "https://maven.aliyun.com/repository/jcenter" }
-    maven { url "https://maven.aliyun.com/repository/mapr-public" }
-    maven { url "https://maven.aliyun.com/repository/staging-alpha" }
-    maven { url "https://maven.aliyun.com/repository/central" }
-    maven { url "https://maven.aliyun.com/repository/public/" }
-    maven { url "https://maven.aliyun.com/repository/google" }
-    maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
-    maven { url "https://maven.aliyun.com/repository/spring" }
-    maven { url "https://maven.aliyun.com/repository/spring-plugin" }
-    maven { url "https://maven.aliyun.com/repository/grails-core" }
-    maven { url "https://maven.aliyun.com/repository/snapshots" }
-    maven { url "https://maven.aliyun.com/repository/apache-snapshots" }
-    maven { url "https://maven.aliyun.com/repository/staging-alpha-group" }
+  mavenLocal()
+  mavenCentral()
+  google()
+  maven { url 'https://maven.aliyun.com/repository/releases' }
+  maven { url "https://maven.aliyun.com/repository/jcenter" }
+  maven { url "https://maven.aliyun.com/repository/mapr-public" }
+  maven { url "https://maven.aliyun.com/repository/staging-alpha" }
+  maven { url "https://maven.aliyun.com/repository/central" }
+  maven { url "https://maven.aliyun.com/repository/public/" }
+  maven { url "https://maven.aliyun.com/repository/google" }
+  maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
+  maven { url "https://maven.aliyun.com/repository/spring" }
+  maven { url "https://maven.aliyun.com/repository/spring-plugin" }
+  maven { url "https://maven.aliyun.com/repository/grails-core" }
+  maven { url "https://maven.aliyun.com/repository/snapshots" }
+  maven { url "https://maven.aliyun.com/repository/apache-snapshots" }
+  maven { url "https://maven.aliyun.com/repository/staging-alpha-group" }
 }
 
 dependencies {
-    implementation fileTree(dir: 'lib', includes: ['*.jar'])
+  // 本地依赖
+  implementation fileTree(dir: 'lib', includes: ['*.jar'])
 
-    compileOnly "org.jetbrains:annotations:+"
-    annotationProcessor "org.jetbrains:annotations:+"
-    compileOnly "org.projectlombok:lombok:+"
-    annotationProcessor "org.projectlombok:lombok:+"
+  // 注释包
+  compileOnly "jakarta.validation:jakarta.validation-api:+"
+  compileOnly "jakarta.annotation:jakarta.annotation-api:+"
+  // lombok
+  compileOnly 'org.projectlombok:lombok:+'
+  annotationProcessor 'org.projectlombok:lombok:+'
 
-    testImplementation "junit:junit:4.12"
-    testCompileOnly "org.jetbrains:annotations:+"
-    testAnnotationProcessor "org.jetbrains:annotations:+"
-    testCompileOnly "org.projectlombok:lombok:+"
-    testAnnotationProcessor "org.projectlombok:lombok:+"
+  // 注释包
+  testCompileOnly "jakarta.validation:jakarta.validation-api:+"
+  testCompileOnly "jakarta.annotation:jakarta.annotation-api:+"
+  // lombok
+  testCompileOnly "org.projectlombok:lombok:+"
+  testAnnotationProcessor "org.projectlombok:lombok:+"
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter:5.12.0-RC2"
 }
 
-task PDCache(type: Jar) {
-    destinationDirectory = file('jar')
-    manifest {
-        attributes(
-                'Manifest-Version': '1.0',
-                'Built-By': 'fybug/风雨bu改',
-                'Created-By': 'IntelliJ IDEA'
-        )
-    }
-    archiveFileName = 'PDCache.jar'
-    // 打包编译输出
-    from sourceSets.main.output
+test {
+  dependencies {
+    testImplementation "org.junit.jupiter:junit-jupiter:5.12.0-RC2"
+  }
+  useJUnitPlatform()
 }
 
-task PDCache_bin(type: Jar) {
-    destinationDirectory = file('jar')
-    manifest {
-        attributes(
-                'Manifest-Version': '1.0',
-                'Built-By': 'fybug/风雨bu改',
-                'Created-By': 'IntelliJ IDEA'
-        )
-    }
-    archiveFileName = 'PDCache_bin.jar'
-    // 打包编译输出
-    from sourceSets.main.output
-    from {
-        // implementation 相关的引入解压并打包入新的jar中
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
+/** 清单文件内容 */
+tasks.withType(Jar).configureEach {
+  destinationDirectory = file('jar')
+  manifest {
+    attributes('Manifest-Version': '1.0',
+               'Built-By': 'fybug/风雨bu改',
+               'Build-Jdk-Spec': 23,
+               'Bundle-Description': '描述',
+               'Bundle-Name': 'PDCache',
+               //							 'Bundle-DocURL': 'https://apidoc.gitee.com/fybug/PDConcurrent/',
+               'Bundle-Vendor': 'IntelliJ IDEA',
+               'Bundle-Version': version,
+               'Bundle-License': 'https://www.apache.org/licenses/LICENSE-2.0',
+               'Created-By': 'Gradle 8.10.2')
+  }
 }
 
-task PDCache_all(type: Jar) {
-    destinationDirectory = file('jar')
-    manifest {
-        attributes(
-                'Manifest-Version': '1.0',
-                'Built-By': 'fybug/风雨bu改',
-                'Created-By': 'IntelliJ IDEA'
-        )
-    }
-    archiveFileName = 'PDCache_all.jar'
-    // 打包编译输出
-    from sourceSets.main.output
-    // 打包源码
-    from sourceSets.main.allSource
-    from {
-        // implementation 相关的引入解压并打包入新的jar中
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
+/** 编译包 */
+tasks.register('PDCache', Jar) {
+  archiveFileName = 'PDCache.jar'
+  archiveClassifier = ''
+  // 打包编译输出
+  from sourceSets.main.output
 }
 
-task PDCache_sources(type: Jar) {
-    destinationDirectory = file('jar')
-    manifest {
-        attributes(
-                'Manifest-Version': '1.0',
-                'Built-By': 'fybug/风雨bu改',
-                'Created-By': 'IntelliJ IDEA'
-        )
-    }
-    archiveFileName = 'PDCache_sources.jar'
-    // 打包源码
-    from sourceSets.main.allSource
+tasks.register('PDCache_bin', Jar) {
+  archiveFileName = 'PDCache_bin.jar'
+  archiveClassifier = 'bin'
+  // 打包编译输出
+  from sourceSets.main.output
+  from {
+    // implementation 相关的引入解压并打包入新的jar中
+    configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+  }
 }
 
-task release {
-    dependsOn clean
-    dependsOn PDCache_all
-    dependsOn PDCache_bin
-    dependsOn PDCache
-    dependsOn PDCache_sources
+/** 源码包 */
+tasks.register('PDCache_sources', Jar) {
+  archiveFileName = 'PDCache_sources.jar'
+  archiveClassifier = 'sources'
+  // 打包源码
+  from sourceSets.main.allSource
+}
+
+tasks.register('release') {
+  dependsOn PDCache
+  dependsOn PDCache_bin
+  dependsOn PDCache_sources
 }

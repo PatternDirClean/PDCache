@@ -1,6 +1,4 @@
 package fybug.nulll.pdcache.supplier;
-import org.jetbrains.annotations.NotNull;
-
 import java.lang.ref.Reference;
 
 import fybug.nulll.pdcache.CacheOb;
@@ -9,6 +7,7 @@ import fybug.nulll.pdcache.memory.Cache;
 import fybug.nulll.pdconcurrent.SyLock;
 import fybug.nulll.pdconcurrent.fun.tryConsumer;
 import fybug.nulll.pdconcurrent.fun.trySupplier;
+import jakarta.validation.constraints.NotNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -60,95 +59,91 @@ import lombok.experimental.Accessors;
 public abstract
 class SCache<V> extends MemoryCache<V> {
 
-    /**
-     * 构造缓存，指定缓存方式
-     *
-     * @since 0.0.2
-     */
-    public
-    SCache(@NotNull Class<? extends Reference> refc) {super(refc); }
+  /**
+   * 构造缓存，指定缓存方式
+   *
+   * @since 0.0.2
+   */
+  public
+  SCache(@NotNull Class<? extends Reference> refc) { super(refc); }
 
-    /**
-     * 构造缓存，指定缓存方式和并发管理
-     *
-     * @since 0.0.3
-     */
-    public
-    SCache(@NotNull Class<? extends Reference> refc, @NotNull SyLock syLock)
-    { super(refc, syLock); }
+  /**
+   * 构造缓存，指定缓存方式和并发管理
+   *
+   * @since 0.0.3
+   */
+  public
+  SCache(@NotNull Class<? extends Reference> refc, @NotNull SyLock syLock)
+  { super(refc, syLock); }
 
-    //----------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------------
 
-    @Override
+  @Override
+  @NotNull
+  public
+  V get(@NotNull tryConsumer<V> run) throws Exception { return super.get(run); }
+
+  @Override
+  @NotNull
+  public
+  V get() throws Exception { return super.get(); }
+
+  /** 创建新的数据 */
+  @NotNull
+  protected abstract
+  V createData() throws Exception;
+
+  /**
+   * 生成新的缓存
+   * <p>
+   * 使用 {@link #createData()} 创建的数据生成
+   */
+  @Override
+  protected @NotNull
+  V emptyData() throws Exception {
+    // 生成新的数据
+    var v = createData();
+    // 绑定缓存
+    putdata(v);
+    return v;
+  }
+
+  /**
+   * 获取缓存构造工具
+   *
+   * @param <V> 缓存内容的类型
+   *
+   * @return 构造工具
+   */
+  @NotNull
+  public static
+  <V> Build<V> build(Class<V> vc) { return new Build<>(); }
+
+  /**
+   * <h2>{@link SCache} 构造工具.</h2>
+   * <ul>
+   * <li>使用 {@link #createdata(trySupplier)} 绑定数据生成接口</li>
+   * <li>使用 {@link #refernce(Class)} 绑定缓存方式</li>
+   * <li>使用 {@link #lockBy(SyLock)} 绑定并发管理</li>
+   * <li>使用 {@link #build()} 进行构造</li>
+   * </ul>
+   *
+   * @version 0.0.1
+   * @since SCache 0.0.1
+   */
+  @Accessors(chain = true, fluent = true)
+  public final static
+  class Build<V> extends CacheOb.Build<V, Build<V>> {
+    /** 数据生产接口 */
+    @Setter private trySupplier<@NotNull V> createdata;
+
     @NotNull
     public
-    V get(@NotNull tryConsumer<V, Exception> run) throws Exception { return super.get(run); }
-
-    @Override
-    @NotNull
-    public
-    V get() throws Exception { return super.get(); }
-
-    //-----------------------------------
-
-    /** 创建新的数据 */
-    @NotNull
-    protected abstract
-    V createData() throws Exception;
-
-    /**
-     * 生成新的缓存
-     * <p>
-     * 使用 {@link #createData()} 创建的数据生成
-     */
-    @Override
-    protected @NotNull
-    V emptyData() throws Exception {
-        // 生成新的数据
-        var v = createData();
-        // 绑定缓存
-        putdata(v);
-        return v;
+    SCache<V> build() {
+      return new SCache<>(refernce, lockBy) {
+        protected @NotNull
+        V createData() throws Exception { return createdata.get(); }
+      };
     }
-
-    /*--------------------------------------------------------------------------------------------*/
-
-    /**
-     * 获取缓存构造工具
-     *
-     * @param <V> 缓存内容的类型
-     *
-     * @return 构造工具
-     */
-    @NotNull
-    public static
-    <V> Build<V> build(Class<V> vc) {return new Build<>();}
-
-    /**
-     * <h2>{@link SCache} 构造工具.</h2>
-     * <ul>
-     * <li>使用 {@link #createdata(trySupplier)} 绑定数据生成接口</li>
-     * <li>使用 {@link #refernce(Class)} 绑定缓存方式</li>
-     * <li>使用 {@link #lockBy(SyLock)} 绑定并发管理</li>
-     * <li>使用 {@link #build()} 进行构造</li>
-     * </ul>
-     *
-     * @version 0.0.1
-     * @since SCache 0.0.1
-     */
-    @Accessors( chain = true, fluent = true )
-    public final static
-    class Build<V> extends CacheOb.Build<V, Build<V>> {
-        /** 数据生产接口 */
-        @Setter private trySupplier<@NotNull V, Exception> createdata;
-
-        @NotNull
-        public
-        SCache<V> build() {
-            return new SCache<>(refernce, lockBy) {
-                protected @NotNull
-                V createData() throws Exception { return createdata.get(); }
-            };
-        }
-    }
+  }
 }

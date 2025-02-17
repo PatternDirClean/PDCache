@@ -15,20 +15,20 @@ import fybug.nulll.pdconcurrent.SyLock;
  */
 final
 class SyLockSupp implements Supplier<SyLock> {
-    // 锁的类型
-    private final Class<? extends SyLock> LOCK_CLASS;
+  // 锁的类型
+  private final Class<? extends SyLock> LOCK_CLASS;
 
-    /** 指定锁的类 */
-    SyLockSupp(Class<? extends SyLock> sylock) { LOCK_CLASS = sylock; }
+  /** 指定锁的类 */
+  SyLockSupp(Class<? extends SyLock> sylock) { LOCK_CLASS = sylock; }
 
-    @Override
-    public
-    SyLock get() {
-        try {
-            return LOCK_CLASS.getConstructor().newInstance();
-        } catch ( Exception e ) {
-            e.printStackTrace();
-        }
-        return SyLock.newObjLock();
+  @Override
+  public
+  SyLock get() {
+    try {
+      return LOCK_CLASS.getConstructor().newInstance();
+    } catch ( Exception e ) {
+      e.printStackTrace();
     }
+    return SyLock.newObjLock();
+  }
 }

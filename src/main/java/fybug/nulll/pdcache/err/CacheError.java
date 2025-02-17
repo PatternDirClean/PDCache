@@ -7,4 +7,4 @@ package fybug.nulll.pdcache.err;
  * @version 0.0.1
  */
 public
-class CacheError extends Exception {}
+class CacheError extends RuntimeException {}
